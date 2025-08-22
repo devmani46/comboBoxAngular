@@ -1,0 +1,60 @@
+.combobox-container {
+  position: relative;
+  width: 250px;
+  font-family: Arial, sans-serif;
+}
+
+.combobox-input {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 6px;
+  cursor: pointer;
+  background: #fff;
+
+  input {
+    border: none;
+    outline: none;
+    flex: 1;
+  }
+
+  .non-searchable {
+    flex: 1;
+    color: #666;
+  }
+
+  .arrow {
+    margin-left: 8px;
+  }
+}
+
+.combobox-options {
+  list-style: none;
+  margin: 4px 0 0 0;
+  padding: 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  max-height: 180px;
+  overflow-y: auto;
+  background: #fff;
+  position: absolute;
+  width: 100%;
+  z-index: 1000;
+
+  li {
+    padding: 8px;
+    cursor: pointer;
+  }
+
+  li:hover {
+    background: #f0f0f0;
+  }
+
+  li.disabled {
+    color: #aaa;
+    pointer-events: none;
+    background: #f9f9f9;
+  }
+}

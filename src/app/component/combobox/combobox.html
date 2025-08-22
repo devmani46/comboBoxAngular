@@ -1,0 +1,33 @@
+<div class="combobox-container">
+  <!-- Input/Search field -->
+  <div class="combobox-input" (click)="toggleDropdown()">
+    
+    @if (searchable) {
+      <input
+        [(ngModel)]="searchText"  
+        [placeholder]="selected || placeholder"
+        (focus)="isOpen = true"
+      />
+    } @else {
+      <div class="non-searchable">
+        {{ selected || placeholder }}
+      </div>
+    }
+
+    <span class="arrow">{{ isOpen ? '▲' : '▼' }}</span>
+  </div>
+
+  <!-- Dropdown options -->
+  @if (isOpen) {
+    <ul class="combobox-options">
+      @for (option of filteredOptions; track option) {
+        <li
+          (click)="selectOption(option)"
+          [class.disabled]="isDisabled(option)"
+        >
+          {{ option }}
+        </li>
+      }
+    </ul>
+  }
+</div>

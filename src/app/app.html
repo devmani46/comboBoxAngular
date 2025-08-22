@@ -1,0 +1,19 @@
+<h1>{{ title }}</h1>
+
+<app-combobox
+  [options]="animals"
+  [searchable]="true"
+  [disabledOptions]="['Ferret']"
+  placeholder="Select of Search"
+  (valueChange)="onPetSelected($event)"
+></app-combobox>
+
+
+
+<app-combobox
+  [options]="animals"
+  [searchable]="false"
+  [disabledOptions]="['Ferret']"
+  placeholder="select without search"
+  (valueChange)="onPetSelected($event)"
+></app-combobox>
