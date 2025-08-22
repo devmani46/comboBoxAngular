@@ -1,0 +1,141 @@
+@if (native) {
+<input #inputRef [id]="id" [placeholder]="placeholder" class="fw-neutral-border-1 fw-native-input border w-full px-1" [ngClass]="{'border-red-300': invalid}" [matAutocomplete]="auto" matAutocompleteOrigin #origin="matAutocompleteOrigin" [formControl]="inputCtrl" (focusin)="onFocusin()" (input)="filter()" (keydown.enter)="$event.preventDefault()" [title]="title" />
+}
+@else {
+<div
+  #comboboxRef
+  #origin="matAutocompleteOrigin"
+  matAutocompleteOrigin
+  class="fw-combobox fw-outline"
+  [class]="wrapperClass"
+  [title]="title"
+  [ngClass]="{
+    'fw-filled-darker': dark,
+    'fw-invalid': invalid,
+    'fw-disabled': disabled,
+    'fw-small': small,
+    'fw-medium': !small,
+    'fw-has-remove': !disableClear && !multiple,
+    'fw-has-prefix': icon,
+  }">
+  @if(icon) {
+  <span class="fw-combobox-icon fw-prefix material-symbols">{{icon}}</span>
+  }
+  <input
+    #inputRef
+    class="fw-combobox-control"
+    [formControl]="inputCtrl"
+    [id]="id"
+    [matAutocomplete]="auto"
+    [matAutocompleteConnectedTo]="origin"
+    [placeholder]="placeholder"
+    (input)="filter()"
+    (focusin)="onFocusin()"
+    (keydown.enter)="$event.preventDefault()" />
+  @if (!disableClear && !multiple && selectedOptions.length) {
+  <button
+    aria-label="Remove"
+    class="fw-combobox-icon material-symbols"
+    type="button"
+    [attr.aria-labelledby]="id+'-remove'"
+    [disabled]="disabled" role="button"
+    [id]="id+'-chevron'"
+    [ngClass]="{'fw-disabled': disabled}"
+    (click)="clear($event)">
+    close
+  </button>
+  }
+  <button
+    aria-label="Open"
+    class="fw-combobox-icon material-symbols"
+    type="button"
+    [attr.aria-expanded]="auto.isOpen"
+    [attr.aria-labelledby]="id+'-chevron'"
+    [disabled]="disabled"
+    [id]="id+'-chevron'"
+    [ngClass]="{'fw-disabled': disabled}"
+    (click)="inputRef.focus()">
+    {{suffix ? suffix : (auto.isOpen ? 'expand_less' : 'expand_more')}}
+  </button>
+</div>
+}
+
+@if (multiple && selectedOptions.length && !hideTags) {
+<ng-content select="[tagsLabel]"></ng-content>
+<ul class="fw-tags flex-wrap">
+  @for (option of selectedOptions; track option; let index = $index;) {
+  <li (click)="onTagClick(option)">
+    <button type="button" class="fw-badge fw-brand fw-filled fw-icon-after" [ngClass]="{'fw-small': small}" [disabled]="disabled">
+      <div class="truncate" style="line-height: 14px;">{{option.label}}</div>
+      <span class="fw-badge-icon">
+        <i class="material-symbols filled">close</i>
+      </span>
+    </button>
+  </li>
+  }
+</ul>
+}
+
+<mat-autocomplete
+  #auto="matAutocomplete"
+  requireSelection
+  disableRipple
+  hideSingleSelectionIndicator
+  [displayWith]="displayFn"
+  (optionSelected)="onSelect($event.option.value)">
+  @if (groups.length) {
+  @for (group of groupOptions; track group) {
+  <mat-optgroup [label]="group.label">
+    @for (option of group.options; track option) {
+    <mat-option [value]="option">
+      <div class="fw-option" [ngClass]="{'fw-disabled': option.disabled}" title="{{option.label}}">
+        <span class="fw-check-icon" [ngClass]="{'fw-check-disabled': option.disabled, 'fw-selected-check': isSelected(option.value)}" [attr.aria-hidden]="isSelected(option.value)">
+          <span class="material-symbols">check</span>
+        </span>
+        <div class="fw-option-label truncate" [title]="option.label">{{option.label}}</div>
+      </div>
+    </mat-option>
+    }
+  </mat-optgroup>
+  }
+  @empty {
+  @if (inputRef?.nativeElement?.value) {
+  <mat-option>
+    <div class="fw-option">
+      <div class="fw-option-label italic fw-neutral-fg-2">No result for "{{inputRef?.nativeElement?.value}}"</div>
+    </div>
+  </mat-option>
+  }
+  }
+  }
+  @else {
+  @for (option of filteredOptions; track option) {
+  <mat-option [value]="option">
+    <div class="fw-option" [ngClass]="{'fw-disabled': option.disabled}" title="{{option.label}}">
+      <span class="fw-check-icon" [ngClass]="{'fw-check-disabled': option.disabled, 'fw-selected-check': isSelected(option.value)}" [attr.aria-hidden]="isSelected(option.value)">
+        <span class="material-symbols">check</span>
+      </span>
+      <div class="fw-option-label truncate" [title]="option.label">{{option.label}}</div>
+    </div>
+  </mat-option>
+  }
+  @empty {
+  @if (inputRef?.nativeElement?.value) {
+  @if (taggable) {
+  <mat-option [value]="{label: inputRef?.nativeElement?.value, value: inputRef?.nativeElement?.value, extra: 'appended'}">
+    <div class="fw-option">
+      <div class="fw-option-label truncate">Press ↓ and ⏎ to add <strong>"{{inputRef?.nativeElement?.value}}"</strong></div>
+    </div>
+  </mat-option>
+  }
+  @else {
+  <mat-option>
+    <div class="fw-option">
+      <div class="fw-option-label italic fw-neutral-fg-2">No result for "{{inputRef?.nativeElement?.value}}"</div>
+    </div>
+  </mat-option>
+  }
+  }
+  }
+  }
+</mat-autocomplete>

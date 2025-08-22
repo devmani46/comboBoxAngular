@@ -1,0 +1,41 @@
+.fw-tags {
+  list-style-type: none;
+  margin-bottom: 0;
+  margin-top: var(--spacingVerticalXS);
+  padding-left: 0;
+  display: flex;
+  grid-gap: var(--spacingHorizontalXS);
+  .fw-button {
+    border: 0;
+  }
+}
+
+.fw-combobox.fw-auto-width {
+  min-width: 20px;
+  max-width: 400px;
+
+  .fw-combobox-control {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+// Independent dropdown width styles
+// :host ::ng-deep .fw-combobox-listbox {
+//   min-width: 200px !important;
+//   width: auto !important;
+//   max-width: 400px !important;
+
+//   .mat-autocomplete-panel {
+//     min-width: 200px !important;
+//     width: auto !important;
+//     max-width: 400px !important;
+//   }
+// }
+
+// Ensure the dropdown width is independent when auto-width is enabled
+// :host ::ng-deep .fw-auto-width + .fw-combobox-listbox,
+// :host ::ng-deep .fw-auto-width ~ .fw-combobox-listbox {
+//   min-width: 250px !important;
+//   width: auto !important;
+// }
