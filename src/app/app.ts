@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./app.scss']
 })
 export class App {
-  title = 'Angular Combobox Demo';
+  title = 'Angular Combobox';
 
   animals = ['Cat', 'Dog', 'Ferret', 'Fish', 'Hamster', 'Snake'];
 
