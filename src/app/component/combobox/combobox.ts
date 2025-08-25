@@ -21,6 +21,7 @@ export class Combobox implements OnDestroy {
   isOpen: boolean = false;
   selected: string | null = null;
 
+  highlightedIndex: number = -1;
   constructor(private elementRef: ElementRef) {}
 
   get filteredOptions(): string[] {
@@ -34,14 +35,17 @@ export class Combobox implements OnDestroy {
 
   openDropdown(): void {
     this.isOpen = true;
+    this.highlightedIndex = -1;
   }
 
   toggleDropdown(): void {
     this.isOpen = !this.isOpen;
+    if (this.isOpen) this.highlightedIndex = -1;
   }
 
   closeDropdown(): void {
     this.isOpen = false;
+    this.highlightedIndex = -1;
   }
 
   selectOption(option: string): void {
@@ -56,21 +60,53 @@ export class Combobox implements OnDestroy {
     return this.disabledOptions.includes(option);
   }
 
-  // Close on outside click
   @HostListener('document:click', ['$event.target'])
   onClickOutside(target: EventTarget | null) {
     if (this.isOpen && target instanceof HTMLElement && !this.elementRef.nativeElement.contains(target)) {
       this.closeDropdown();
     }
   }
-  // Close on ESC key
-  @HostListener('document:keydown.escape', ['$event'])
-  onEscapePress(event: Event) {
-    if (event instanceof KeyboardEvent && this.isOpen) {
-      this.closeDropdown();
-      event.stopPropagation();
+@HostListener('document:keydown.escape', ['$event'])
+onEscapePress(event: Event) {
+  const keyboardEvent = event as KeyboardEvent;
+  if (this.isOpen) {
+    this.closeDropdown();
+    keyboardEvent.stopPropagation();
+  }
+}
+
+@HostListener('document:keydown', ['$event'])
+onKeyDown(event: Event) {
+  if (!this.isOpen) return;
+
+  const keyboardEvent = event as KeyboardEvent;
+  const options = this.filteredOptions;
+
+  if (keyboardEvent.key === 'ArrowDown') {
+    keyboardEvent.preventDefault();
+    if (this.highlightedIndex < options.length - 1) {
+      this.highlightedIndex++;
+    } else {
+      this.highlightedIndex = 0;
     }
   }
+
+  if (keyboardEvent.key === 'ArrowUp') {
+    keyboardEvent.preventDefault();
+    if (this.highlightedIndex > 0) {
+      this.highlightedIndex--;
+    } else {
+      this.highlightedIndex = options.length - 1;
+    }
+  }
+
+  if (keyboardEvent.key === 'Enter') {
+    keyboardEvent.preventDefault();
+    if (this.highlightedIndex >= 0 && this.highlightedIndex < options.length) {
+      this.selectOption(options[this.highlightedIndex]);
+    }
+  }
+}
 
   ngOnDestroy(): void {
     this.closeDropdown();

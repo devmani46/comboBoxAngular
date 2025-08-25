@@ -46,6 +46,7 @@
   li {
     padding: 8px;
     cursor: pointer;
+    transition: background 0.2s ease;
   }
 
   li:hover {
@@ -56,6 +57,12 @@
     color: #aaa;
     pointer-events: none;
     background: #f9f9f9;
+  }
+
+  /* 🔹 Highlighted via keyboard (ArrowUp/ArrowDown) */
+  li.highlighted {
+    background: #007bff;   /* blue highlight */
+    color: #fff;
   }
 }
 

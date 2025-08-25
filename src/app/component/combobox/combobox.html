@@ -1,4 +1,4 @@
- <div class="combobox-container">
+<div class="combobox-container">
   <div class="combobox-input">
     @if (searchable) {
       <input
@@ -17,12 +17,13 @@
 
   @if (isOpen) {
     <ul class="combobox-options">
-      @for (option of filteredOptions; track option) {
+      @for (option of filteredOptions; let i = $index; track option) {
         <li
-          (click)="selectOption(option)"
-          [class.disabled]="isDisabled(option)"
-        >
-          {{ option }}
+            (click)="selectOption(option)"
+            [class.disabled]="isDisabled(option)"
+            [class.highlighted]="i === highlightedIndex"
+          >
+            {{ option }}
         </li>
       }
     </ul>
